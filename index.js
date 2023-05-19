@@ -29,12 +29,20 @@ async function run() {
     await client.connect();
 
     // server code
+    // create data
     const toysCollection = client.db("kidsToyUser").collection("toys");
 
     app.post("/toys", async (req, res) => {
       const newToy = req.body;
       console.log(newToy);
       const result = await toysCollection.insertOne(newToy);
+      res.send(result);
+    });
+
+    // read data
+    app.get("/toys", async (req, res) => {
+      const cursor = toysCollection.find();
+      const result = await cursor.toArray();
       res.send(result);
     });
     // server code end
