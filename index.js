@@ -45,6 +45,13 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+
+    // read data for all toys
+    app.get("/all-toys", async (req, res) => {
+      const cursor = toysCollection.find().sort({$natural:-1}).limit(20);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
     // server code end
 
     // Send a ping to confirm a successful connection
