@@ -56,19 +56,57 @@ async function run() {
     // query data for view details
     app.get("/toys/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { email: id};
+      const query = { email: id };
       const cursor = toysCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
     });
 
     // delete a collection
-    app.delete("/toys/:id", async(req, res) => {
+    app.delete("/toys/:id", async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)};
+      const query = { _id: new ObjectId(id) };
       const result = await toysCollection.deleteOne(query);
       res.send(result);
+    });
+
+    // update a collection
+    app.get('/update-toys/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await toysCollection.findOne(query);
+      res.send(result);
     })
+
+    // app.get("/update-toys/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = { _id: new ObjectId(id) };
+    //   const cursor = toysCollection.findOne(query);
+    //   const result = await cursor.toArray();
+    //   res.send(result);
+    // });
+
+    app.put("/update-toys/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedToy = req.body;
+      const toy = {
+        $set: {
+          toyName: updatedToy.toyName,
+          photo: updatedToy.photo,
+          sellerName: updatedToy.sellerName,
+          email: updatedToy.email,
+          category: updatedToy.category,
+          price: updatedToy.price,
+          ratting: updatedToy.ratting,
+          quantity: updatedToy.quantity,
+          description: updatedToy.description,
+        },
+      };
+      const result = await toysCollection.updateOne(filter, toy, options);
+      res.send(result);
+    });
     // server code end
 
     // Send a ping to confirm a successful connection
