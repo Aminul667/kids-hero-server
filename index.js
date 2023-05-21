@@ -56,8 +56,14 @@ async function run() {
     // query data for view details
     app.get("/toys/:id", async (req, res) => {
       const id = req.params.id;
+      // sorting
+      const sortOrder = req.query.sort;
+      const options = {
+        sort:{"price": sortOrder === 'asc' ? 1 : -1}
+      }
+
       const query = { email: id };
-      const cursor = toysCollection.find(query);
+      const cursor = toysCollection.find(query, options);
       const result = await cursor.toArray();
       res.send(result);
     });
