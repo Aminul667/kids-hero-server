@@ -62,6 +62,15 @@ async function run() {
       res.send(result);
     });
 
+    // query by id
+    app.get("/toys-id/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const cursor = toysCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
     // delete a collection
     app.delete("/toys/:id", async (req, res) => {
       const id = req.params.id;
